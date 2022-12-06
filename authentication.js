@@ -9,25 +9,17 @@ let result
 let token
 client.on("connect", e => {
     console.log("connected")
-    client.subscribe("/dentistimo/#", {qos:1},e => {
+    client.subscribe("/dentistimo/unauthenticated/#", {qos:1},e => {
         client.on("message", (topic, m, option) => {
             console.log('aaoo got something')
             if (m.length !== 0){
                 try {
                     console.log(m.toString())
                     let message = JSON.parse(m.toString())
-                    if (message.url=== '/users'){
-                         result= mqtt('postU', '/users', this.data)
-                        token = result.token
-                    }
-                    else{
-                        
-                       result= mqtt('post', postRequest.url, this.data)
-                       authenticateUser()
-                    }
-                    
-                    console.log(option)
-                } catch (e) {
+                    let response = { "id": message.id, "response": "response", "data": "data" }
+                    return client.publish(topic, JSON.stringify(response), {qos:1})
+                } 
+                catch (e) {
                     let response = { "id": topic.split('/').pop(), "response": "response", "data": "400 Bad Requests" }
                     return client.publish(topic, JSON.stringify(response), {qos:1})
                 }
