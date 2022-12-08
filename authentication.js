@@ -5,6 +5,7 @@ const Api = axios.create({
     baseURL: process.env.VUE_APP_API_ENDPOINT || 'http://localhost:8000/api'
 })
 const jwt= require("jsonwebtoken")
+
 let result
 let token
 client.on("connect", e => {
@@ -14,10 +15,20 @@ client.on("connect", e => {
             console.log('aaoo got something')
             if (m.length !== 0){
                 try {
-                    console.log(m.toString())
                     let message = JSON.parse(m.toString())
-                    let response = { "id": message.id, "response": "response", "data": "data" }
-                    return client.publish(topic, JSON.stringify(response), {qos:1})
+                    if (message.request) {
+                        authenticateUser(message.data).then(data => {
+                            if (data.authenticated === true) {
+                                mqtt.mqtt(message.request, message.url, data.userdata, true).then(res => {
+                                    return client.publish(topic, JSON.stringify(res), {qos:1})
+                                })
+                            } else if (data.authenticated === false) {
+                                let res = { "id": message.id, "response": "response", "data": "401 unauthorized" }
+                                client.publish(topic, JSON.stringify(res), {qos:1})
+                                client.unsubscribe(topic)
+                            }
+                        })
+                    }
                 } 
                 catch (e) {
                     let response = { "id": topic.split('/').pop(), "response": "response", "data": "400 Bad Requests" }
@@ -47,24 +58,26 @@ async function postRequest(url, data, Autho) {
     }
 }
 
- async function authenticateUser(req, res, next) {
+ async function authenticateUser(req) {
+    let data = {
+        'authenticated': false,
+        'userdata': req.userData
+    }
 
-    if (token === null) {
-        return res.status(401).json({ error: "User not authenticated!"});
+    if (req.token === null) {
+        return data;
     }
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_KEY);
         if (decoded) {
-            req.authenticated = true;
-            req.userData = decoded
-            return next();
+            data.authenticated = true;
+            data.userdata = decoded
         } else {
-            return res.status(401).json({ error: "User not authenticated!"});
-            //req.authenticated = false;
+            return data;
         }
     } catch (err) {
-        return res.status(401).json({error: "User not authenticated!"});
+        return data;
     }
 
 };
