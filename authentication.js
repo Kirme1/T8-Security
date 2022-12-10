@@ -1,10 +1,13 @@
 const axios = require("axios")
+const mqttMethod = require("./MQTT")
 const mqtt = require("mqtt")
 const client = mqtt.connect("mqtt://localhost:1883/")
+const process = require('./nodemon.json')
 const Api = axios.create({
     baseURL: process.env.VUE_APP_API_ENDPOINT || 'http://localhost:8000/api'
 })
 const jwt= require("jsonwebtoken")
+
 
 let result
 let token
@@ -16,12 +19,13 @@ client.on("connect", e => {
             if (m.length !== 0){
                 try {
                     let message = JSON.parse(m.toString())
-                    if (message.request) {
+                    console.log(message)
+                    if (message.request && message.authenticated !== true) {
                         authenticateUser(message.data).then(data => {
                             if (data.authenticated === true) {
-                                mqtt.mqtt(message.request, message.url, data.userdata, true).then(res => {
-                                    return client.publish(topic, JSON.stringify(res), {qos:1})
-                                })
+                                console.log('publishing')
+                                message.authenticated = true
+                                client.publish(topic, JSON.stringify(message), {qos:1})
                             } else if (data.authenticated === false) {
                                 let res = { "id": message.id, "response": "response", "data": "401 unauthorized" }
                                 client.publish(topic, JSON.stringify(res), {qos:1})
@@ -59,9 +63,10 @@ async function postRequest(url, data, Autho) {
 }
 
  async function authenticateUser(req) {
+    console.log(req.token)
     let data = {
-        'authenticated': false,
-        'userdata': req.userData
+        authenticated: false,
+        userdata: req.token
     }
 
     if (req.token === null) {
@@ -69,10 +74,11 @@ async function postRequest(url, data, Autho) {
     }
     
     try {
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(req.token, process.env.JWT_KEY);
         if (decoded) {
             data.authenticated = true;
-            data.userdata = decoded
+            data.userdata = decoded;
+            return data;
         } else {
             return data;
         }
