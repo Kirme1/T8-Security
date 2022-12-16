@@ -17,6 +17,5 @@ unit-test:
   tags:
     - docker
   script:
-    - npm install mocha
-    - npm install chai
+    - npm install
     - npm test
