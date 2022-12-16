@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 
 var chai = require('chai');
 var should = chai.should();
-const { describe, it } = require('node:test');
 describe('Authentication', function() {
     describe('#authenticateUser()', function() {
         const req = {
@@ -21,7 +20,6 @@ describe('Authentication', function() {
         it('should authenticate the request when the token is valid', function(done) {
                 authenticateUser(req).then(
                 function (result) {
-                    console.log(result)
                     result.authenticated.should.equal(true)
                     result.userdata.email.should.equal('email')
                     result.userdata._id.should.equal('id')
@@ -36,7 +34,6 @@ describe('Authentication', function() {
             req.token = ''
             authenticateUser(req).then(
                 function (result) {
-                    console.log(result)
                     result.authenticated.should.equal(false)
                     done();
                 },
