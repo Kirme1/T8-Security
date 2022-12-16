@@ -9,6 +9,6 @@
     },
     "scripts": {
         "start": "node authentication.js",
-        "test": "mocha"
+        "test": "mocha --exit"
     }
 }
