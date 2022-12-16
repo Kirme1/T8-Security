@@ -17,4 +17,5 @@ unit-test:
   tags:
     - docker
   script:
+    - npm install
     - npm test
