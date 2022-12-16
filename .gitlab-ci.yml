@@ -17,5 +17,4 @@ unit-test:
   tags:
     - docker
   script:
-    - cd test
     - npm test
