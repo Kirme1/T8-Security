@@ -8,7 +8,11 @@ const Api = axios.create({
 })
 const jwt= require("jsonwebtoken")
 
-
+// All the requests from client except for post a user and login a user that should be handled in the backend, 
+// are sent to this component first.
+// the message data sent by the client, is checked with the authenticatUser method and if the token is valid, 
+// the user is authenticated and the request is then published and backend then can subscribe to give response.
+// All the errors are handled to prvent this from crashing.
 let result
 let token
 client.on("connect", e => {
@@ -42,7 +46,7 @@ client.on("connect", e => {
         })
     })
 })
-
+// We are not using this method here!
 async function postRequest(url, data, Autho) {
     let res = {}
     if(Autho != undefined){
@@ -61,7 +65,9 @@ async function postRequest(url, data, Autho) {
         return res
     }
 }
-
+// Here we check if the token that has been sent with the user's request is valid or not.
+// The validity of token is checked with the verify method of JsonWebToken library.
+// If the token is valid, the user is authenticated otherwise it is onauthenticated.
  async function authenticateUser(req) {
     console.log(req.token)
     let data = {

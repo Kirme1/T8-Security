@@ -13,7 +13,7 @@ build:
     - npm build
 
 unit-test:
-  stage: build
+  stage: test
   tags:
     - docker
   script:
