@@ -93,3 +93,5 @@ async function postRequest(url, data, Autho) {
     }
 
 };
+
+module.exports = {authenticateUser:authenticateUser}
