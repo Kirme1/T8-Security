@@ -1,3 +1,4 @@
+//Here the security compoent connects to the middleware.
 function generateId(length) {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
