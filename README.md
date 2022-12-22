@@ -51,11 +51,17 @@ When you're ready to make this README your own, just edit this file and use the 
 ## Suggestions for a good README
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Dentistimo Security
+This is the security component of group eights [Dentistimo](https://git.chalmers.se/courses/dit355/dit356-2022/t-8/documentation) system. Dentistimo is a distributed system which allows users to book dentist appointments in the Gothenburg region and allows for more clinics to be added in the future. This repository contains the security component which is responsible for authenticating messages sent by other components of the system. This is done through the use of [MQTT](https://mqtt.org/) and [jsonwebtoken](https://jwt.io/). Messages which have not been checked by this component are recieved through mqtt and then, if the message has a token inside it, it checks the authenticity of the message. If the message has a valid token, it is sent to the backend. If the message does not have a valid token, it is sent back to the source with an error message. The security component provides the following functionalities:
+ 
+- receive mqtt messages with the topic "unauthenticated"
+- parse mqtt messages
+- verify jsonwebtoken
+- retrieve user data from a jsonwebtoken
+- publish mqtt messages
+- handle no token error
+- handle invalid token error
+- Change authentication status of a request
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
@@ -64,9 +70,76 @@ On some READMEs, you may see small images that convey metadata, such as whether 
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+In order to run the component you need to have the project on your computer, node.js installed and mosquito installed.
+- The first step is installing [node.js](https://nodejs.org/en/download/), what version you should download depends on your operating system (this guide will show the process for windows, if you're using mac or linux you can check out [this](https://kinsta.com/blog/how-to-install-node-js/) guide which explains that process as well)
+  - Double click the .msi file in order to begin the installation process
+ 
+&nbsp;
+&nbsp;
+ 
+![License agreement](./public/accept-node-js-license-agreement.png)
+ 
+*Click on next.*
+ 
+&nbsp;
+ 
+![Installation location](./public/select-node.js-installation-folder.png)
+ 
+*select the destination where you want to install Node.js. If you don’t want to change the directory, go with the Windows default location and click the Next button again.*
+ 
+&nbsp;
+ 
+![Node options](./public/node.js-custom-setup-option-.png)
+ 
+*If you want a standard installation with the Node.js default features, click the Next button. Otherwise, you can select your specific elements from the icons in the tree before clicking Next.*
+ 
+&nbsp;
+ 
+![Node tools](./public/install-Tools-for-native-modules.png)
+ 
+*Node.js offers you options to install tools for native modules. If you’re interested in these, click the checkbox to mark your preferences, or click Next to move forward with the default.*
+ 
+&nbsp;
+ 
+![Install](./public/begin-node.js-installation.png)
+ 
+*Click install, this can take a couple of minutes*
+ 
+&nbsp;
+ 
+  - Once you have finished the installation you can verify it by opening the [CMD](https://www.lifewire.com/command-prompt-2625840) and typing:
+ 
+  >```node --version```
+ 
+  - You can also check npm by typing:
+ 
+  >```npm --version```
+ 
+  If node has been correctly installed you should see the version name in the CMD prompt
+ 
+&nbsp;
+
+- The next step is to download the project .zip file or pull the project with [git](https://git-scm.com/), if you have that installed.
+ 
+- Extract the project files from the .zip and put them in a place you can easily find, example:
+  >C:\Users\name\Desktop\security
+ 
+- open the [CMD](https://www.lifewire.com/command-prompt-2625840) and go to the directory where you put the files. This can be done by typing cd + the file path. If I put my files in C:\Users\name\Desktop\security I would type:
+  >cd C:\Users\name\Desktop\security
+
+- Type:
+  >npm install
+ 
+- Once all dependencies have been installed, type the command
+  >npm start
+ 
+If everything is installed correctly and running as it should you should see something like this
+ 
+ ![connected](./public/confirmatio.png)
 
 ## Usage
+The main use of the security is to be a safety net which checks if the client has a token when sending requests.
+
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
 ## Support
