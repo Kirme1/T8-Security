@@ -107,7 +107,7 @@ The only important thing to note here is the location of the "token" and authent
 ## Support
 If you encounter any issues with the security component, we recomend checking that mqtt is working as it should first since this is usualy the problem. If mqtt is working as it should then you can also try running the tests, this is done by typing `npm test` in the [CMD](https://www.lifewire.com/command-prompt-2625840). If everything is okay then it should look something like this:
 
-![test](public\test.png)
+![test](./public/test.png)
 
 If neither of those things appear to be the issue you are free to contact us at [this](mailto:djcoetzer10@gmail.com) email.
 
